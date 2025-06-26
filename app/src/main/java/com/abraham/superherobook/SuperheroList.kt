@@ -9,17 +9,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 
 @Composable
-fun SuperheroList(superheros:List<Superhero>){
+fun SuperheroList(superheros:List<Superhero>, navController: NavController){
     LazyColumn(
         contentPadding = PaddingValues(5.dp),
         modifier = Modifier.fillMaxSize()
             .background(color = MaterialTheme.colorScheme.secondaryContainer)
     ) {
         items(superheros){
-            SuperheroRow(superhero = it)
+            SuperheroRow(superhero = it, navController= navController)
         }
     }
 }

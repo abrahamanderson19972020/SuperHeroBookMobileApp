@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +33,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.abraham.superherobook.ui.theme.SuperHeroBookTheme
+import com.google.gson.Gson
 
 class MainActivity : ComponentActivity() {
     private lateinit var superheros: ArrayList<Superhero>
@@ -41,10 +48,27 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         superheros = getData()
         setContent {
+            val navController = rememberNavController()
             SuperHeroBookTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
-                        MainScreen(superheros)
+                        NavHost(navController = navController, startDestination = "list_screen"){
+                            composable("list_screen"){
+                                MainScreen(superheros, navController)
+                            }
+
+                            composable("details_screen/{superhero}",
+                                arguments = listOf(navArgument("superhero"){
+                                    type = NavType.StringType
+                                })
+                            ){
+                                val superheroString = remember {
+                                    it.arguments?.getString("superhero")
+                                }
+                                val selectedHero = Gson().fromJson<Superhero>(superheroString, Superhero::class.java)
+                                DetailScreen(superhero = selectedHero)
+                            }
+                        }
                     }
                 }
             }

@@ -3,6 +3,7 @@ package com.abraham.superherobook
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,14 +21,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.google.gson.Gson
 
 
 @Composable
-fun SuperheroRow(superhero: Superhero){
+fun SuperheroRow(superhero: Superhero, navController: NavController){
     Column(
         modifier = Modifier.fillMaxWidth()
             .background(color = MaterialTheme.colorScheme.primaryContainer)
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable {
+                navController.navigate("details_screen/${Gson().toJson(superhero)}")
+            },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
